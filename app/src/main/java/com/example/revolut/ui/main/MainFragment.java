@@ -1,42 +1,31 @@
 package com.example.revolut.ui.main;
 
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.revolut.CurrencyViewModelFactory;
 import com.example.revolut.R;
-import com.example.revolut.Revolut;
 import com.example.revolut.adapter.CurrencyAdapter;
 import com.example.revolut.callback.CurrencyClickCallback;
 import com.example.revolut.callback.CurrencyUpdatInterface;
 import com.example.revolut.databinding.MainFragmentBinding;
-import com.example.revolut.di.component.AppComponent;
 import com.example.revolut.model.Currency;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import dagger.android.support.AndroidSupportInjection;
 import dagger.android.support.DaggerFragment;
 
 public class MainFragment extends DaggerFragment implements CurrencyUpdatInterface {

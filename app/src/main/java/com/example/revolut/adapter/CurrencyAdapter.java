@@ -2,34 +2,26 @@ package com.example.revolut.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.icu.text.DecimalFormat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.revolut.R;
 import com.example.revolut.callback.CurrencyClickCallback;
 import com.example.revolut.databinding.CurrencyRowBinding;
 import com.example.revolut.model.Currency;
-import com.example.revolut.ui.main.MainFragment;
-import com.example.revolut.ui.main.MainViewModel;
 import com.example.revolut.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.CurrencyViewHolder> {
 
@@ -54,7 +46,6 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Curren
 
         CurrencyViewHolder currencyViewHolder = new CurrencyViewHolder(binding);
 
-//        binding.setCallback(currencyClickCallback);
         return currencyViewHolder;
     }
 
@@ -67,7 +58,6 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Curren
     @Override
     public void onBindViewHolder(@NonNull CurrencyViewHolder holder, int position, List<Object> payloads) {
         if(!payloads.isEmpty()) {
-//            Log.d("payload", payloads.get(0).toString());
             holder.bind(data.get(position));
         }
         else
