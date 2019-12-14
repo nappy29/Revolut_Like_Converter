@@ -1,5 +1,6 @@
 package com.example.revolut.ui.main;
 
+import android.app.LauncherActivity;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -12,6 +13,7 @@ import com.example.revolut.model.Currency;
 import com.example.revolut.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -33,10 +35,13 @@ public class MainViewModel extends ViewModel {
 
     private String current_currency_name = "";
     private String base_code = "EUR";
-    private Double base_amount = 1.00;
+    private static Double base_amount = 1.00;
 
     private final MutableLiveData<List<Currency>> currencies = new MutableLiveData<>();
     private final MutableLiveData<Boolean> loading = new MutableLiveData<>();
+
+    private List<Currency> finalResult = new ArrayList<>();
+    private static int position = 0;
 
     @Inject
     public MainViewModel(CurrencyRepository currencyRepository){
@@ -78,7 +83,7 @@ public class MainViewModel extends ViewModel {
                     .observeOn(AndroidSchedulers.mainThread())
                     .repeatUntil(() -> !(base_code.equalsIgnoreCase(current_currency_name)))
                     .subscribe(listofcurrencies -> {
-                                currencies.setValue(listofcurrencies);
+                                currencies.setValue(constructSourceList(listofcurrencies));
                                 loading.setValue(false);
                             },
                             error -> {
@@ -114,5 +119,16 @@ public class MainViewModel extends ViewModel {
             disposable.clear();
             disposable = null;
         }
+    }
+
+    public static void onCurrencyItemClicked(int pos){
+        position = pos;
+    }
+
+    private List<Currency> constructSourceList(List<Currency> currencies){
+        finalResult = currencies;
+        Collections.swap(finalResult, position, 0);
+
+        return finalResult;
     }
 }

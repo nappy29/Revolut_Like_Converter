@@ -12,12 +12,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.revolut.R;
 import com.example.revolut.callback.CurrencyClickCallback;
 import com.example.revolut.databinding.CurrencyRowBinding;
 import com.example.revolut.model.Currency;
+import com.example.revolut.ui.main.MainViewModel;
 import com.example.revolut.utils.Utils;
 
 import java.util.ArrayList;
@@ -26,9 +28,10 @@ import java.util.List;
 public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.CurrencyViewHolder> {
 
     public  List<Currency> data = new ArrayList<>();
-    private  List<Currency> data_update = new ArrayList<>();
+
     private CurrencyClickCallback currencyClickCallback;
     double baseamount = 1.00;
+    double base_currency_amount = 1.00;
     DecimalFormat twoDForm = new DecimalFormat("#.##");
 
     private Context context;
@@ -58,6 +61,7 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Curren
     @Override
     public void onBindViewHolder(@NonNull CurrencyViewHolder holder, int position, List<Object> payloads) {
         if(!payloads.isEmpty()) {
+//            Log.e("Payload",  String.valueOf(payloads.get(0)));
             holder.bind(data.get(position));
         }
         else
@@ -113,6 +117,10 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Curren
                         data.add(0, currency);
                         notifyItemMoved(position, 0);
                         Log.d("isdataMoved", "This data item has been moved");
+
+                        MainViewModel.onCurrencyItemClicked(position);
+
+                        base_currency_amount = currency.getExch_rate();
                     }
                 }
 
@@ -132,7 +140,8 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Curren
                         if(charSequence.toString().equals("") || charSequence.toString().equals("."))
                             charSequence = "0.00";
 
-                        currencyClickCallback.onClick(new Currency(currency.getCurency_code(), Double.parseDouble(charSequence.toString())));
+                        currency.setExch_rate(Double.parseDouble(charSequence.toString()));
+                        currencyClickCallback.onClick(currency);
 
                     }
 
@@ -148,54 +157,57 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Curren
 
     public void upDateAmount(Double baseamount){
 
-        this.baseamount = baseamount;
+        this.baseamount = baseamount/this.base_currency_amount;
+        Log.e("amountreceived", String.valueOf(this.baseamount));
         notifyItemRangeChanged(0, data.size() - 1, this.baseamount);
     }
 
     public void upDateListofCurrency(List<Currency> currencies){
 
 
-//        if(data.isEmpty()){
+        if(data.isEmpty()){
             data = currencies;
-            notifyItemRangeChanged(0, data.size() - 1, baseamount);
-//        }
-//        else {
-//            DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffUtil.Callback() {
-//                @Override
-//                public int getOldListSize() {
-//                    return CurrencyAdapter.this.data.size();
-//                }
-//
-//                @Override
-//                public int getNewListSize() {
-//                    return currencies.size();
-//                }
-//
-//                @Override
-//                public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-//                    return CurrencyAdapter.this.data.get(oldItemPosition).getCurency_code()
-//                            .equalsIgnoreCase(currencies.get(newItemPosition).getCurency_code());
-//
-////                    return true;
-//                }
-//
-//                @Override
-//                public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-//                    Currency new_cur = currencies.get(newItemPosition);
-//                    Currency old = currencies.get(oldItemPosition);
-//                    return new_cur.getCurency_code().equalsIgnoreCase(old.getCurency_code())
-//                            && new_cur.getExch_rate() == old.getExch_rate();
-//                }
-//                @Override
-//                public Object getChangePayload(int oldItemPosition, int newItemPosition) {
-//                    return currencies.get(newItemPosition).getExch_rate();
-//                }
-//            });
-//
-//            data.clear();
-//            data.addAll(currencies);
-////            data = currencies;
-//            result.dispatchUpdatesTo(this);
-//        }
+//            notifyItemRangeChanged(0, data.size() - 1, baseamount);
+        }
+        else {
+            DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+                @Override
+                public int getOldListSize() {
+                    return data.size();
+                }
+
+                @Override
+                public int getNewListSize() {
+                    return currencies.size();
+                }
+
+                @Override
+                public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                    return data.get(oldItemPosition).getCurency_code()
+                            .equalsIgnoreCase(currencies.get(newItemPosition).getCurency_code());
+
+//                    return true;
+                }
+
+                @Override
+                public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                    Currency new_cur = currencies.get(newItemPosition);
+                    Currency old = data.get(oldItemPosition);
+                    return new_cur.getCurency_code().equalsIgnoreCase(old.getCurency_code())
+                            && new_cur.getExch_rate() == old.getExch_rate();
+                }
+                @Override
+                public Object getChangePayload(int oldItemPosition, int newItemPosition) {
+                    return currencies.get(newItemPosition).getExch_rate();
+//                    return super.getChangePayload(oldItemPosition, newItemPosition);
+                }
+            });
+
+            result.dispatchUpdatesTo(this);
+
+            data.clear();
+            data.addAll(currencies);
+        }
+
     }
 }

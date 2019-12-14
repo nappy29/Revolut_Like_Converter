@@ -16,6 +16,7 @@
         app:cardUseCompatPadding="true">
 
         <RelativeLayout
+            android:id="@+id/relative_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="15dp"
