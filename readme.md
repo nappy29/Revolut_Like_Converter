@@ -21,5 +21,5 @@ This project adheres to *clean code* principles and *MVVM pattern* as well.
 
 ## ScreenShots
 
-![Main Screen](main_screen.png "Title")
+![Main Screen](main_screen.png "main screen")   ![partial view](gif_work.gif "currency conversion")
 

@@ -63,6 +63,8 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Curren
         if(!payloads.isEmpty()) {
 //            Log.e("Payload",  String.valueOf(payloads.get(0)));
             holder.bind(data.get(position));
+
+//            holder.binding.edRates.setText(Double.toString(Double.valueOf(twoDForm.format((Double) payloads.get(0) * baseamount))));
         }
         else
             super.onBindViewHolder(holder, position, payloads);
