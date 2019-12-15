@@ -167,7 +167,7 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Curren
 
         if(data.isEmpty()){
             data = currencies;
-//            notifyItemRangeChanged(0, data.size() - 1, baseamount);
+            notifyItemRangeChanged(0, data.size() - 1, baseamount);
         }
         else {
             DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffUtil.Callback() {

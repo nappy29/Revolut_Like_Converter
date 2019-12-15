@@ -123,10 +123,15 @@ public class MainViewModel extends ViewModel {
 
     public static void onCurrencyItemClicked(int pos){
         position = pos;
+        Log.e("itempos", " " + position);
     }
 
     private List<Currency> constructSourceList(List<Currency> currencies){
         finalResult = currencies;
+
+//        Currency currency = finalResult.get(position);
+//        finalResult.remove(position);
+//        finalResult.add(0, currency);
         Collections.swap(finalResult, position, 0);
 
         return finalResult;
