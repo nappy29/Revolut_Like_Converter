@@ -1,5 +1,6 @@
 package com.example.revolut.model;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
@@ -8,8 +9,19 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CurrencyApiResponse {
+
+    private CurrencyApiResponse(){
+
+    }
+
+    private CurrencyApiResponse(String base, String date, String json){
+        base_currency = base;
+        this.date = date;
+        results = new Gson().fromJson(json, JsonObject.class);
+    }
 
     @SerializedName("base")
     private String base_currency;
@@ -45,7 +57,23 @@ public class CurrencyApiResponse {
         this.date = date;
     }
 
-    class CurrencyDetailsApiResponse{
-        JsonArray jsonElements;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CurrencyApiResponse)) return false;
+        CurrencyApiResponse that = (CurrencyApiResponse) o;
+        return Objects.equals(getBase_currency(), that.getBase_currency()) &&
+                Objects.equals(getDate(), that.getDate()) &&
+                Objects.equals(getResults(), that.getResults());
+    }
+
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(getBase_currency(), getDate(), getResults());
+//    }
+
+    public static CurrencyApiResponse create(String base, String date, String json){
+
+        return new CurrencyApiResponse(base, date, json);
     }
 }

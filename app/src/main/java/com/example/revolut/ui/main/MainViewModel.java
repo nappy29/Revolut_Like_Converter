@@ -67,7 +67,7 @@ public class MainViewModel extends ViewModel {
         fetchCurrency(currency.getCurency_code(), currency.getExch_rate());
     }
 
-    private void fetchCurrency(String base_code, double base_amount){
+    protected void fetchCurrency(String base_code, double base_amount){
 //        loading.setValue(true);
 
         if(base_code.equalsIgnoreCase(current_currency_name)){
@@ -94,22 +94,18 @@ public class MainViewModel extends ViewModel {
     }
 
 
-    private Observable<List<Currency>> getModifiedObservable(String base_currency, List<Currency> currency) {
+    protected Observable<List<Currency>> getModifiedObservable(String base_currency, List<Currency> currency) {
 
-       return Observable.create(new ObservableOnSubscribe<List<Currency>>() {
+       return Observable.create((ObservableOnSubscribe<List<Currency>>) e -> {
 
-            @Override
-            public void subscribe(ObservableEmitter<List<Currency>> e) throws Exception {
+           List<Currency> currencies = new ArrayList<>();
 
-                List<Currency> currencies = new ArrayList<>();
+           currencies.add(new Currency(base_currency, 1.00));
+           currencies.addAll(currency);
 
-                currencies.add(new Currency(base_currency, 1.00));
-                currencies.addAll(currency);
-
-                e.onNext(currencies);
-                e.onComplete();
-            }
-        }).subscribeOn(Schedulers.io());
+           e.onNext(currencies);
+           e.onComplete();
+       }).subscribeOn(Schedulers.io());
     }
 
     @Override
@@ -121,18 +117,22 @@ public class MainViewModel extends ViewModel {
         }
     }
 
+    public int getPosition(){
+        return position;
+    }
+
     public static void onCurrencyItemClicked(int pos){
         position = pos;
         Log.e("itempos", " " + position);
     }
 
-    private List<Currency> constructSourceList(List<Currency> currencies){
+    protected List<Currency> constructSourceList(List<Currency> currencies){
         finalResult = currencies;
 
 //        Currency currency = finalResult.get(position);
 //        finalResult.remove(position);
 //        finalResult.add(0, currency);
-        Collections.swap(finalResult, position, 0);
+        Collections.swap(finalResult, getPosition(), 0);
 
         return finalResult;
     }

@@ -2,7 +2,6 @@ package com.example.revolut.utils;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import com.example.revolut.model.Currency;
 import com.google.gson.JsonObject;
@@ -15,7 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Utils {
-
 
     public static List<Currency> getCurrencies(JsonObject jsonObject){
         List<Currency> currencies = new ArrayList<>();
