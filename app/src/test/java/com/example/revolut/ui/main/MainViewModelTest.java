@@ -137,13 +137,23 @@ public class MainViewModelTest {
         list.add(new Currency("BGN", 1.9589));
         list.add(new Currency("BRL", 4.7995));
 
+        List<Currency> newlist = new ArrayList<>();
+
+        list.add(new Currency("EUR", 1.0));
+        list.add(new Currency("AUD", 1.619));
+        list.add(new Currency("BGN", 1.9589));
+        list.add(new Currency("BRL", 4.7995));
+
+        List<Currency> listofCurrencies = mainViewModel.constructSourceList(list);
+
+
         mainViewModel.onCurrencyItemClicked(1);
 
-        assertTrue(Objects.equals(mainViewModel.constructSourceList(list).get(0), new Currency("AUD", 1.619)));
+        assertTrue(Objects.equals(listofCurrencies.get(0), new Currency("AUD", 1.619)));
 
         mainViewModel.onCurrencyItemClicked(1);
 
-        assertTrue(Objects.equals(mainViewModel.constructSourceList(list).get(0), new Currency("EUR", 1)));
+        assertTrue(Objects.equals(listofCurrencies.get(0), new Currency("EUR", 1)));
 
         mainViewModel.onCurrencyItemClicked(0);
     }

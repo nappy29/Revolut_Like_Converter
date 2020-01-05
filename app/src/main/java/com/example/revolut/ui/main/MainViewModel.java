@@ -20,7 +20,6 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -39,6 +38,7 @@ public class MainViewModel extends ViewModel {
 
     private final MutableLiveData<List<Currency>> currencies = new MutableLiveData<>();
     private final MutableLiveData<Boolean> loading = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> error = new MutableLiveData<>();
 
     private List<Currency> finalResult = new ArrayList<>();
     private static int position = 0;
@@ -47,6 +47,7 @@ public class MainViewModel extends ViewModel {
     public MainViewModel(CurrencyRepository currencyRepository){
         this.currencyRepository = currencyRepository;
         disposable =  new CompositeDisposable();
+        loading.setValue(true);
         fetchCurrency(base_code, base_amount);
     }
 
@@ -58,17 +59,16 @@ public class MainViewModel extends ViewModel {
         return loading;
     }
 
-    public void setBaseValues(Currency currency){
-//        Log.e("set base", base_currency + "  :" + base_amount);
-//        this.base_code = base_currency;
-//        this.base_amount = base_amount;
+    LiveData<Boolean> getErrror() {
+        return error;
+    }
 
+    public void setBaseValues(Currency currency){
         Log.d("setBase", " this has been call with amount : " + currency.getExch_rate());
         fetchCurrency(currency.getCurency_code(), currency.getExch_rate());
     }
 
     protected void fetchCurrency(String base_code, double base_amount){
-//        loading.setValue(true);
 
         if(base_code.equalsIgnoreCase(current_currency_name)){
             currencyUpdatInterface.onAmountUpdate(base_amount);
@@ -85,9 +85,14 @@ public class MainViewModel extends ViewModel {
                     .subscribe(listofcurrencies -> {
                                 currencies.setValue(constructSourceList(listofcurrencies));
                                 loading.setValue(false);
+                                this.error.setValue(false);
                             },
                             error -> {
                                 Log.e("LiveData", "with error here" + error);
+
+                                // set to empty string so that the fetch can happen again when the retry button is clicked
+                                current_currency_name = "";
+                                this.error.setValue(true);
                             });
         }
 
@@ -123,7 +128,7 @@ public class MainViewModel extends ViewModel {
 
     public static void onCurrencyItemClicked(int pos){
         position = pos;
-        Log.e("itempos", " " + position);
+        Log.e("isdataMoved", "" + position);
     }
 
     protected List<Currency> constructSourceList(List<Currency> currencies){

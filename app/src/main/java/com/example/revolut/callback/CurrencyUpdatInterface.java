@@ -7,5 +7,4 @@ import java.util.List;
 public interface CurrencyUpdatInterface {
 
     void onAmountUpdate(Double amount);
-    void onListUpdate(List<Currency> currency);
 }

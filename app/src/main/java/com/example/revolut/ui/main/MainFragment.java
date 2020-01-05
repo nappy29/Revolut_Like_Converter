@@ -4,6 +4,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.revolut.CurrencyViewModelFactory;
 import com.example.revolut.R;
@@ -21,8 +23,7 @@ import com.example.revolut.callback.CurrencyClickCallback;
 import com.example.revolut.callback.CurrencyUpdatInterface;
 import com.example.revolut.databinding.MainFragmentBinding;
 import com.example.revolut.model.Currency;
-
-import java.util.List;
+import com.google.android.material.snackbar.Snackbar;
 
 import javax.inject.Inject;
 
@@ -32,7 +33,6 @@ public class MainFragment extends DaggerFragment implements CurrencyUpdatInterfa
 
     private MainViewModel mViewModel;
 
-//    @BindView(R.id.rv_curr) RecyclerView recyclerView;
 
     @Inject
     CurrencyViewModelFactory currencyViewModelFactory;
@@ -71,6 +71,12 @@ public class MainFragment extends DaggerFragment implements CurrencyUpdatInterfa
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        binding.errBut.setOnClickListener(view -> {
+            mViewModel.fetchCurrency("EUR", 1.00);
+            binding.errBut.setVisibility(View.GONE);
+            binding.progressView.setVisibility(View.VISIBLE);
+
+        });
         observeViewModel();
     }
 
@@ -93,18 +99,31 @@ public class MainFragment extends DaggerFragment implements CurrencyUpdatInterfa
             if(isLoading != null)
                 if(isLoading)
                     binding.progressView.setVisibility(View.VISIBLE);
+                else
+                    binding.progressView.setVisibility(View.GONE);
+        });
+
+        mViewModel.getErrror().observe(this, isError -> {
+            if(isError != null)
+                if(isError) {
+                    binding.errBut.setVisibility(View.VISIBLE);
+                    binding.progressView.setVisibility(View.GONE);
+
+                    int textViewId = com.google.android.material.R.id.snackbar_text;
+                    Snackbar snackbar = Snackbar.make(getView(), "Please ensure your device has an active internet connection", Snackbar.LENGTH_LONG);
+                    TextView textView = snackbar.getView().findViewById(textViewId);
+
+                    textView.setTextColor(Color.parseColor("#FFC107"));
+                    snackbar.show();
+                }
+                else
+                    binding.errBut.setVisibility(View.GONE);
         });
     }
 
     @Override
     public void onAmountUpdate(Double amount) {
         currencyAdapter.upDateAmount(amount);
-    }
-
-    @Override
-    public void onListUpdate(List<Currency> currencies){
-//        currencyAdapter.upDateListofCurrency(currencies);
-//        observeViewModel();
     }
 
     private final CurrencyClickCallback currencyClickCallback = new CurrencyClickCallback() {

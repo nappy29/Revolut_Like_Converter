@@ -61,10 +61,7 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Curren
     @Override
     public void onBindViewHolder(@NonNull CurrencyViewHolder holder, int position, List<Object> payloads) {
         if(!payloads.isEmpty()) {
-//            Log.e("Payload",  String.valueOf(payloads.get(0)));
             holder.bind(data.get(position));
-
-//            holder.binding.edRates.setText(Double.toString(Double.valueOf(twoDForm.format((Double) payloads.get(0) * baseamount))));
         }
         else
             super.onBindViewHolder(holder, position, payloads);
@@ -118,7 +115,7 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Curren
                         data.remove(position);
                         data.add(0, currency);
                         notifyItemMoved(position, 0);
-                        Log.d("isdataMoved", "This data item has been moved");
+                        Log.d("isdataMoved", "" + position);
 
                         MainViewModel.onCurrencyItemClicked(position);
 
@@ -138,7 +135,6 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Curren
                 public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
                     if(binding.edRates.isFocused()) {
-//                        currency.setExch_rate(Double.parseDouble(charSequence.toString()));
                         if(charSequence.toString().equals("") || charSequence.toString().equals("."))
                             charSequence = "0.00";
 
@@ -188,7 +184,6 @@ public class CurrencyAdapter extends RecyclerView.Adapter<CurrencyAdapter.Curren
                     return data.get(oldItemPosition).getCurency_code()
                             .equalsIgnoreCase(currencies.get(newItemPosition).getCurency_code());
 
-//                    return true;
                 }
 
                 @Override

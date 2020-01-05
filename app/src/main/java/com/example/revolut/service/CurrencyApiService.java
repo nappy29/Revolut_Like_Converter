@@ -10,7 +10,4 @@ public interface CurrencyApiService {
 
     @GET("latest?base=EUR")
     Observable<CurrencyApiResponse> getCurrencies();
-
-    @GET("latest?base=EUR")
-    Observable<CurrencyApiResponse> getCurrenciesdetails();
 }

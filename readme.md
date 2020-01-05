@@ -16,6 +16,8 @@ This app is developed using the following technologies and Libraries.
 * Dagger2
 * RxJava
 * Retrofit
+* Mockito (for Unit Testing)
+* Espresso(for UI Testing)
 
 This project adheres to *clean code* principles and *MVVM pattern* as well.
 
